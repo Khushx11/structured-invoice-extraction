@@ -1,0 +1,31 @@
+:root{color-scheme:light;--ink:#14243a;--muted:#53657b;--line:#dbe3ed;--surface:#fff;--canvas:#f1f5f9;--accent:#135c56;--accent-soft:#e1f2ef;--warn:#8a3d16;--warn-soft:#fff0e3}
+*{box-sizing:border-box}body{margin:0;background:var(--canvas);color:var(--ink);font:15px/1.5 system-ui,-apple-system,sans-serif}
+[hidden]{display:none!important}
+.bar{background:#172a40;color:white;display:flex;justify-content:space-between;align-items:center;min-height:64px;padding:0 max(24px,calc((100vw - 1320px)/2));letter-spacing:.01em}
+.brand{display:flex;align-items:center;gap:10px;font-weight:720}.mark{display:grid;place-items:center;width:30px;height:30px;border-radius:6px;background:#2c4b62;font-size:20px}
+.local{color:#c8d7e6;font-size:.82rem}main{max-width:1370px;margin:auto;padding:24px}
+h1,h2,h3,p{margin:0}h1{font-size:clamp(1.65rem,3vw,2.15rem);letter-spacing:-.04em}h2{font-size:1.12rem;overflow-wrap:anywhere}h3{font-size:.96rem}
+.intake{padding:21px;background:var(--surface);border:1px solid var(--line);border-radius:12px}.intake p,.minor,#model{color:var(--muted);font-size:.84rem}
+form,.actions,.panel-head,.workspace-head{display:flex;gap:12px;align-items:center;justify-content:space-between}
+form{justify-content:flex-start;align-items:flex-end;flex-wrap:wrap;margin-top:14px}label{display:grid;gap:4px;color:var(--muted);font-size:.8rem;font-weight:620}
+input,select,button,a{font:inherit}input,select{border:1px solid #bbc9d8;border-radius:6px;background:white;color:var(--ink);padding:7px 8px;min-width:0;width:100%}
+button,.actions a{border:1px solid #b6c5d5;border-radius:6px;color:var(--ink);background:#fff;padding:8px 11px;cursor:pointer;text-decoration:none}
+button.primary{background:var(--accent);border-color:var(--accent);color:white;font-weight:650}button:disabled{cursor:wait;opacity:.62}
+:focus-visible{outline:3px solid #107c74;outline-offset:2px}#message:not(:empty),#review-message:not(:empty){margin-top:8px;color:var(--warn)}
+.workspace{margin-top:18px}.workspace-head{margin-bottom:10px}.actions{flex-wrap:wrap;justify-content:flex-end}
+.status{padding:4px 8px;border-radius:4px;background:var(--warn-soft);color:var(--warn);font-size:.8rem;font-weight:700}.status.good{color:var(--accent);background:var(--accent-soft)}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.06fr);gap:14px;align-items:start}
+.panel{min-width:0;background:var(--surface);padding:14px;border:1px solid var(--line);border-radius:10px}
+.source{position:sticky;top:12px}.panel-head label{display:flex;align-items:center;gap:6px}.preview{overflow:auto;max-height:74vh;background:#dce5ef;border:1px solid var(--line);border-radius:7px;margin:10px 0;padding:14px}
+.paper{position:relative;max-width:760px;margin:auto;background:#fff}.paper img{display:block;width:100%;height:auto}
+#region{position:absolute;border:2px solid #0f766e;background:#36cfc844;pointer-events:none}
+.sub,details{margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}summary{cursor:pointer;font-weight:650}
+.fields,.line-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:7px}.line-fields{grid-template-columns:2fr repeat(3,1fr)}
+.field{min-width:0}.field.flagged input{border-color:#af5729;background:#fffaf5}.field .locate{padding:0;border:0;background:transparent;color:var(--accent);text-align:left;text-decoration:underline;font-size:.75rem;overflow-wrap:anywhere}
+.line{padding:8px 0;border-bottom:1px solid var(--line)}.line strong{font-size:.84rem}.line .panel-head button{font-size:.74rem;padding:2px 5px}
+.flag-list{display:grid;gap:4px;margin-top:9px}.flag-list button{text-align:left;background:var(--warn-soft);border:0;color:var(--warn);font-size:.81rem}
+.check-list{font-size:.82rem;padding-left:22px}.check-list li{margin:4px 0}.fail{color:var(--warn);font-weight:650}.pass{color:var(--accent)}
+#approval{display:flex;align-items:flex-end;gap:8px}#approval label{flex:1}pre{white-space:pre-wrap;max-height:200px;overflow:auto;color:var(--muted);font-size:.75rem}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.source{position:static}.preview{max-height:62vh}.bar,main{padding-left:14px;padding-right:14px}.workspace-head{align-items:flex-start}}
+@media(max-width:480px){.line-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.actions{gap:4px}.actions a{padding:4px}}
+
