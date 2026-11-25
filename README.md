@@ -54,3 +54,7 @@ The upload flow also offers optional contrast and sharpness enhancement. Paired 
 - [Local deployment and limitations](docs/deploy.md)
 
 The full-record extraction and automation-coverage benchmark uses fictional invoices. The real FCC and ConfBench experiments measure amount extraction only. The benchmark supports a permission-cleared real-scan manifest, and [the real-invoice study protocol](docs/data.md#real-invoice-study) specifies how to measure review effort. The extraction revisions are deterministic text rules and spatial heuristics over revision-recorded OCR. Complex tables, unlabelled fields, atypical currencies and heavily degraded scans can require substantial manual review.
+
+## Licence
+
+The original project code and documentation are available under the [MIT License](LICENSE). Third-party dependencies and external datasets retain their own terms. See [dataset provenance](docs/external-data.md) for the benchmark data licences.
