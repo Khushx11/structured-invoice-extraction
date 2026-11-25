@@ -45,10 +45,12 @@ async function run() {
       const response = page.waitForResponse(value => value.url().includes("/api/invoices?") && value.request().method() === "POST");
       await page.getByRole("button", {name: "Extract invoice"}).click();
       const result = await response;
-      const body = await result.json();
-      assert.equal(result.status(), 201, JSON.stringify(body));
+      assert.equal(result.status(), 201);
       await page.getByText(expected, {exact: true}).waitFor();
-      return body;
+      const src = await page.locator("#image").getAttribute("src");
+      const id = src.split("/")[3];
+      const body = await (await page.request.get(baseline + "/api/invoices/" + id)).json();
+      return {id, ...body};
     }
 
     await caption("Structured Invoice Extraction and Review · two fictional scan uploads", 6500);
@@ -68,7 +70,9 @@ async function run() {
     const update = page.waitForResponse(value => value.url().endsWith("/" + ambiguous.id) && value.request().method() === "POST");
     await target.fill(expected);
     await target.press("Tab");
-    const corrected = await (await update).json();
+    assert.equal((await update).status(), 200);
+    await page.getByText("Correction saved.", {exact: true}).waitFor();
+    const corrected = await (await page.request.get(baseline + "/api/invoices/" + ambiguous.id)).json();
     assert.equal(corrected.current.line_items[0].line_amount.value, expected);
     assert.equal(corrected.original.line_items[0].line_amount.value, ambiguous.current.line_items[0].line_amount.value);
     assert.equal(corrected.checks.filter(check => check.status === "fail").length, 0);
@@ -97,5 +101,6 @@ async function run() {
 }
 
 run().catch(error => { console.error(error); process.exitCode = 1; });
+
 
 
