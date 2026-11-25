@@ -13,6 +13,7 @@
     <form id="upload" aria-label="Invoice upload">
       <label>Invoice <input id="file" type="file" accept=".pdf,.png,.jpeg,.jpg" required></label>
       <label>Extractor <select id="method"><option value="layout">Spatial layout</option><option value="rules">Text rules</option></select></label>
+      <label class="scan-option"><input id="enhance-scan" type="checkbox"> Try blur and contrast enhancement</label>
       <button id="process" class="primary">Extract invoice</button>
     </form>
     <p id="message" role="status" aria-live="polite"></p>
@@ -42,4 +43,3 @@
   </section>
 </main>
 </body></html>
-

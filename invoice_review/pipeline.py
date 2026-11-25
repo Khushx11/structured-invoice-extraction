@@ -14,7 +14,7 @@ from .review import start
 ALLOWED = {".pdf", ".png", ".jpg", ".jpeg"}
 
 
-def ingest(store, filename, body, method, policy):
+def ingest(store, filename, body, method, policy, *, enhance=False):
     if not body or len(body) > MAX_BYTES:
         raise ValueError("Please supply a file up to 15 MiB.")
     filename = Path(filename).name
@@ -33,7 +33,7 @@ def ingest(store, filename, body, method, policy):
             with Image.open(source) as image:
                 if image.format not in {"PNG", "JPEG"}:
                     raise ValueError("Image content must be PNG or JPEG.")
-        pages = load_pages(source, directory)
+        pages = load_pages(source, directory, enhance=enhance)
         if not pages:
             raise ValueError("No readable pages.")
         extraction = extract(pages, method)
@@ -47,5 +47,3 @@ def ingest(store, filename, body, method, policy):
     except BaseException:
         shutil.rmtree(directory)
         raise
-
-

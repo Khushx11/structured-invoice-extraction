@@ -1,0 +1,146 @@
+{
+  "model_revision": "ocr-text-amount-ranker/1.0.0",
+  "source_hashes": {
+    "hyperbots_jsonl_sha256": "9b9fdd5f83b9e1bb9311f9046e61770f1ee979b502b955afd4047dfb4e3e769d",
+    "fcc_parquet_sha256": "c0fb260c58066c59cbcf2a42ad63a5d138adba2993629d154b4946f44af3846a"
+  },
+  "hyperbots": {
+    "counts": {
+      "train": 117,
+      "dev": 40,
+      "test": 40
+    },
+    "layouts": {
+      "classic": "train",
+      "modern": "train",
+      "compact": "train",
+      "two-column": "dev",
+      "ledger": "test"
+    },
+    "supplier_overlap_rows_excluded": 3,
+    "thresholds": {
+      "subtotal": 0.9,
+      "tax": 0.9,
+      "total": 0.9
+    },
+    "dev": {
+      "label_rules": {
+        "subtotal": {
+          "n": 40,
+          "exact": 40,
+          "extracted": 40,
+          "exact_match": 1.0,
+          "amount_mae_when_extracted": 0.0
+        },
+        "tax": {
+          "n": 40,
+          "exact": 40,
+          "extracted": 40,
+          "exact_match": 1.0,
+          "amount_mae_when_extracted": 0.0
+        },
+        "total": {
+          "n": 40,
+          "exact": 34,
+          "extracted": 34,
+          "exact_match": 0.85,
+          "amount_mae_when_extracted": 0.0
+        }
+      },
+      "learned_ranker": {
+        "subtotal": {
+          "n": 40,
+          "exact": 40,
+          "extracted": 40,
+          "exact_match": 1.0,
+          "amount_mae_when_extracted": 0.0
+        },
+        "tax": {
+          "n": 40,
+          "exact": 40,
+          "extracted": 40,
+          "exact_match": 1.0,
+          "amount_mae_when_extracted": 0.0
+        },
+        "total": {
+          "n": 40,
+          "exact": 40,
+          "extracted": 40,
+          "exact_match": 1.0,
+          "amount_mae_when_extracted": 0.0
+        }
+      }
+    },
+    "test": {
+      "label_rules": {
+        "subtotal": {
+          "n": 40,
+          "exact": 40,
+          "extracted": 40,
+          "exact_match": 1.0,
+          "amount_mae_when_extracted": 0.0
+        },
+        "tax": {
+          "n": 40,
+          "exact": 40,
+          "extracted": 40,
+          "exact_match": 1.0,
+          "amount_mae_when_extracted": 0.0
+        },
+        "total": {
+          "n": 40,
+          "exact": 30,
+          "extracted": 30,
+          "exact_match": 0.75,
+          "amount_mae_when_extracted": 0.0
+        }
+      },
+      "learned_ranker": {
+        "subtotal": {
+          "n": 40,
+          "exact": 40,
+          "extracted": 40,
+          "exact_match": 1.0,
+          "amount_mae_when_extracted": 0.0
+        },
+        "tax": {
+          "n": 40,
+          "exact": 40,
+          "extracted": 40,
+          "exact_match": 1.0,
+          "amount_mae_when_extracted": 0.0
+        },
+        "total": {
+          "n": 40,
+          "exact": 40,
+          "extracted": 40,
+          "exact_match": 1.0,
+          "amount_mae_when_extracted": 0.0
+        }
+      }
+    }
+  },
+  "fcc_external": {
+    "source_documents": 75,
+    "documents_with_label": 68,
+    "target": "NetAmountDue",
+    "label_rules": {
+      "total": {
+        "n": 68,
+        "exact": 9,
+        "extracted": 13,
+        "exact_match": 0.1323529411764706,
+        "amount_mae_when_extracted": 4276.916923076923
+      }
+    },
+    "learned_ranker": {
+      "total": {
+        "n": 68,
+        "exact": 8,
+        "extracted": 23,
+        "exact_match": 0.11764705882352941,
+        "amount_mae_when_extracted": 6424.221304347826
+      }
+    }
+  }
+}

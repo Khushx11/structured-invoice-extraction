@@ -1,0 +1,43 @@
+name: External invoice amount benchmark
+on:
+  pull_request:
+    paths:
+      - tools/external_amounts.py
+      - requirements-benchmark.txt
+      - .github/workflows/external-benchmark.yml
+  push:
+    branches: [main]
+    paths:
+      - tools/external_amounts.py
+      - requirements-benchmark.txt
+      - .github/workflows/external-benchmark.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  train-and-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements-benchmark.txt
+      - name: Fetch pinned publisher snapshots
+        run: |
+          mkdir -p var/external
+          curl -fsSL --retry 2 'https://huggingface.co/datasets/hyperbots-inc/synthetic-invoice-extraction/resolve/a86f2138061ae4499c0745040fa46d20afaa507f/data/test.jsonl' -o var/external/hyperbots.jsonl
+          curl -fsSL --retry 2 'https://huggingface.co/datasets/amazon-agi/RealKIE-FCC-Verified/resolve/3252a67a9c9da82e168eae518da8c860027c0a67/data/test-00000-of-00001.parquet' -o var/external/fcc.parquet
+      - name: Fit on Hyperbots and test the held-out layout and FCC transfer
+        run: python -m tools.external_amounts --hyperbots var/external/hyperbots.jsonl --fcc var/external/fcc.parquet --output var/external/metrics.json --model var/external/weights.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: external-invoice-amount-evidence
+          path: |
+            var/external/metrics.json
+            var/external/weights.json
+          if-no-files-found: error
+

@@ -7,6 +7,7 @@ import xml.etree.ElementTree as ET
 from PIL import Image, ImageOps, ImageStat
 
 from . import ocr
+from .quality import enhance_scan
 
 MAX_BYTES = 15 * 1024 * 1024
 MAX_PAGES = 8
@@ -49,7 +50,19 @@ def images(source, dest):
     return [source], []
 
 
-def load_pages(source: Path, dest: Path):
+def scan_words(image, path, enhance):
+    if not enhance:
+        return ocr.recognise(path, *image.size)
+    enhanced_path = path.with_name("enhanced-" + path.name)
+    try:
+        enhance_scan(image).save(enhanced_path)
+        words, engine = ocr.recognise(enhanced_path, *image.size)
+        return words, engine + "/contrast-sharpness-v1"
+    finally:
+        enhanced_path.unlink(missing_ok=True)
+
+
+def load_pages(source: Path, dest: Path, *, enhance=False):
     inputs, embedded = images(source, dest)
     result = []
     for number, path in enumerate(inputs, 1):
@@ -69,14 +82,14 @@ def load_pages(source: Path, dest: Path):
         elif blank:
             words, engine = [], "blank-page"
         else:
-            words, engine = ocr.recognise(target, *base.size)
+            words, engine = scan_words(base, target, enhance)
             score = ocr.orientation_score(words)
             if score < 48:
                 candidate_path = dest / "rotation.png"
                 for angle in (90, 180, 270):
                     candidate = base.rotate(angle, expand=True)
                     candidate.save(candidate_path)
-                    candidate_words, _ = ocr.recognise(candidate_path, *candidate.size)
+                    candidate_words, _ = scan_words(candidate, candidate_path, enhance)
                     trial = ocr.orientation_score(candidate_words)
                     if trial > score + 1:
                         words, score, rotation = candidate_words, trial, angle
@@ -88,4 +101,3 @@ def load_pages(source: Path, dest: Path):
         if path.name.startswith("render-") and path.parent == dest:
             path.unlink()
     return result
-
