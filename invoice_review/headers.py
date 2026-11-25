@@ -33,8 +33,12 @@ def find_labels(row):
 def extract(rows, page, result, layout):
     for i, row in enumerate(rows):
         matches = list(find_labels(row))
-        for start, end, key in matches:
-            if start > 0 or result[key]["value"] is not None:
+        consumed = 0
+        for start, end, key in sorted(matches, key=lambda match: (match[0], -match[1])):
+            if start < consumed or (start > 0 and not layout):
+                continue
+            consumed = end
+            if result[key]["value"] is not None:
                 continue
             # Adjacent labels can share a line on two-column layouts.
             stop = min((next_start for next_start, _, _ in matches if next_start >= end), default=len(row)) if layout else len(row)
@@ -57,4 +61,5 @@ def extract(rows, page, result, layout):
             value = normalise(key, " ".join(word.text.strip(":") for word in words))
             if value is not None or result[key]["raw"] is None:
                 result[key] = field(words, page, value)
+
 
