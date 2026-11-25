@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Structured Invoice Review</title><link rel="stylesheet" href="/style.css">
+<script defer src="/app.js"></script>
+</head>
+<body>
+<header class="bar"><div class="brand"><span class="mark" aria-hidden="true">▤</span> Invoice Review</div><span class="local">Local workspace</span></header>
+<main>
+  <section class="intake" aria-labelledby="main-title">
+    <div><h1 id="main-title">Structured invoice review</h1><p>Extract an invoice, verify it against the scan, and export an approved record.</p></div>
+    <form id="upload" aria-label="Invoice upload">
+      <label>Invoice <input id="file" type="file" accept=".pdf,.png,.jpeg,.jpg" required></label>
+      <label>Extractor <select id="method"><option value="layout">Spatial layout</option><option value="rules">Text rules</option></select></label>
+      <button id="process" class="primary">Extract invoice</button>
+    </form>
+    <p id="message" role="status" aria-live="polite"></p>
+  </section>
+  <section id="workspace" class="workspace" hidden>
+    <div class="workspace-head">
+      <div><h2 id="filename"></h2><p id="model"></p></div>
+      <div class="actions"><span id="status" class="status"></span><a id="json" hidden>Export JSON</a><a id="csv" hidden>Export CSV</a></div>
+    </div>
+    <div class="grid">
+      <section class="panel source" aria-labelledby="source-title">
+        <div class="panel-head"><h2 id="source-title">Source document</h2><label>Page <select id="pages"></select></label></div>
+        <div id="preview" class="preview"><div class="paper"><img id="image" alt="Invoice source page"><span id="region" hidden></span></div></div>
+        <p id="page-info" class="minor"></p><details><summary>Page text</summary><pre id="ocr"></pre></details>
+      </section>
+      <section class="panel review" aria-labelledby="review-title">
+        <div class="panel-head"><h2 id="review-title">Review record</h2><span id="flag-count" class="minor"></span></div>
+        <div id="flags" class="flag-list"></div>
+        <section class="sub"><h3>Header fields</h3><div id="headers" class="fields"></div></section>
+        <section class="sub"><div class="panel-head"><h3>Line items</h3><button id="add" type="button">Add line</button></div><div id="items"></div></section>
+        <details open><summary>Reconciliation</summary><ol id="checks" class="check-list"></ol></details>
+        <details><summary>Audit trail</summary><ol id="history" class="check-list"></ol></details>
+        <div id="approval" class="sub"><label>Approval note <input id="note" maxlength="500" placeholder="Required for unresolved flags"></label><button id="approve" class="primary" type="button">Approve invoice</button></div>
+        <p id="review-message" role="status" aria-live="polite"></p>
+      </section>
+    </div>
+  </section>
+</main>
+</body></html>
+
