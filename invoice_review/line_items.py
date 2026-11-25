@@ -1,6 +1,6 @@
 """Two table-reading strategies over shared OCR coordinates."""
 from .geometry import field
-from .headers import label
+from .headers import find_labels, label
 from .normalise import normalise
 from .schema import ITEM
 
@@ -23,9 +23,9 @@ def columns(row):
 
 
 def is_footer(row):
-    tokens = [label(word.text) for word in row[:3]]
-    return bool(tokens and (tokens[0] in {"subtotal", "tax", "gst", "vat", "discount", "total", "payment", "terms", "notes", "page", "currency"}
-                            or " ".join(tokens[:2]) in {"sub total", "net amount", "amount due", "grand total", "invoice total", "sales tax", "less discount", "tax total"}))
+    return (any(start == 0 and key in {"subtotal", "tax", "discount", "total"}
+                for start, _, key in find_labels(row))
+            or label(row[0].text) in {"payment", "terms", "notes", "page", "currency"})
 
 
 def make_item(cells, page):
@@ -65,4 +65,5 @@ def extract(rows, page, layout, inherited):
             if item:
                 items.append(item)
     return items, anchors
+
 
