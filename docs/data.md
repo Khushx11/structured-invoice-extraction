@@ -8,3 +8,12 @@ The benchmark also accepts a local permission-cleared manifest. Keep real files 
 
 Candidate sources reviewed include [Rossum DocILE](https://docile.rossum.ai/) and [Salesforce INV-CDIP](https://github.com/salesforce/inv-cdip). DocILE requires a research access request. INV-CDIP's annotations cover seven header fields and its underlying source documents have separate terms. Neither supplies results in this repository. A permission-cleared, English real-scan benchmark with complete line-item labels remains outstanding.
 
+
+## Real-invoice study
+
+Use permission-cleared English invoices with independently verified header values and complete line-item labels. [DocILE](https://docile.rossum.ai/) is a candidate for research access. Confirm the terms, the completeness of invoice annotations and the ability to group documents by supplier and layout before selecting a cohort. Keep the source documents and any reviewer logs local.
+
+1. Group by supplier and layout before splitting. Deduplicate source documents across development and test. Keep any degraded derivative with its original. Record the counts of documents and distinct suppliers, and mark unreadable and unlabelled data separately from verified absence.
+2. Freeze the review threshold on development data. On untouched test suppliers, report invoice accuracy, line-item precision and recall, accepted errors, review fraction and p95 processing time. Keep degraded scans in a separate paired stress analysis. Report uncertainty at the supplier level where the sample allows.
+3. Ask reviewers to correct and approve invoices using the workspace. Capture active review seconds, corrections per invoice, unresolved flags and final accuracy against independently adjudicated labels. Check exported records with the schema. Use a manual-entry comparison if claiming time saved.
+4. Publish aggregate results, sample sizes and protocol deviations. Actual review time and full-record accuracy on real invoices are pending access to labelled documents and a reviewer study.

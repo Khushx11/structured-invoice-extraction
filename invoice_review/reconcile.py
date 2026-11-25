@@ -1,5 +1,5 @@
 """Explain arithmetic differences with decimal cent rounding."""
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal, ROUND_HALF_UP, localcontext
 
 CENT = Decimal("0.01")
 
@@ -14,6 +14,14 @@ def number(group, key):
 
 
 def reconcile(record):
+    # Two accepted 22-character operands can produce 44 digits before rounding.
+    # Leave room for fractional alignment and sums across an invoice.
+    with localcontext() as context:
+        context.prec = 64
+        return _checks(record)
+
+
+def _checks(record):
     checks = []
 
     def compare(name, actual, expected, path):
