@@ -1,0 +1,25 @@
+name: Invoice extraction checks
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  unit-and-ocr:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: sudo apt-get update && sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-eng
+      - run: python -m pip install -r requirements.txt
+      - run: python -m unittest discover -s tests -v
+      - run: python -m tools.benchmark --per-template 2 --output var/ci-benchmark.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-tesseract-benchmark
+          path: var/ci-benchmark.json
+
