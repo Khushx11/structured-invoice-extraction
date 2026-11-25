@@ -106,7 +106,7 @@ def invoice(root, template, index, *, scanned=False, stress=None, second_page=Fa
             y -= 26
             canvas.drawString(left, y, row["description"])
             for x, key in zip(columns[1:], ("quantity", "unit_price", "line_amount")):
-                canvas.drawRightString(x, y, row[key])
+                canvas.drawRightString(x, y, money(Decimal(row[key])) if key == "quantity" else row[key])
         return y
 
     heading(1)
@@ -181,4 +181,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
