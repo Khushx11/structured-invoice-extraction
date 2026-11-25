@@ -42,7 +42,11 @@ Open [http://127.0.0.1:8000](http://127.0.0.1:8000). The upload accepts up to ei
 
 ## Try the fictional demo
 
-[Watch the 69-second captioned browser recording](docs/demo.webm).
+Upload fictional scans, locate and correct a disputed line amount, approve the invoice, then export the resulting record.
+
+[Watch the 62-second captioned walkthrough](https://raw.githubusercontent.com/Khushx11/structured-invoice-extraction/main/docs/demo.webm)
+
+[![Fictional invoice under review with the disputed line amount located on the source scan](docs/demo/preview.png)](https://raw.githubusercontent.com/Khushx11/structured-invoice-extraction/main/docs/demo.webm)
 
 ```sh
 python -m tools.synthetic --output var/demo --demo
