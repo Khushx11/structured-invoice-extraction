@@ -1,5 +1,7 @@
 # Structured Invoice Extraction and Review
 
+Portfolio by [Khush Bhavin Maru](https://github.com/Khushx11) · Adelaide University MAAIM.
+
 How much invoice processing can run without human review at a chosen observed error target? This project compares two extraction approaches and links extracted values to a source page and region when evidence is available.
 
 Upload an English PDF, PNG or JPEG, then inspect the extracted invoice beside its source. Review flags surface missing values and arithmetic discrepancies. Reviewers can correct fields, add or remove lines, approve records and export JSON or line-item CSV. The audit trail preserves the original extraction.
