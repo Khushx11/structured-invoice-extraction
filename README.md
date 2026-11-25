@@ -6,6 +6,22 @@ How much invoice processing can run without human review at a chosen observed er
 
 Upload an English PDF, PNG or JPEG, then inspect the extracted invoice beside its source. Review flags surface missing values and arithmetic discrepancies. Reviewers can correct fields, add or remove lines, approve records and export JSON or line-item CSV. The audit trail preserves the original extraction.
 
+
+## Invoice review workflow
+
+```mermaid
+flowchart LR
+    A["PDF or scanned image"]
+    B["OCR and field extraction"]
+    C["Evidence and arithmetic checks"]
+    D["Review and approved export"]
+    A --> B --> C --> D
+```
+
+![Automation coverage versus error on fictional invoices](results/coverage-error.png)
+
+The chart shows fictional invoice cohorts from the full-record evaluation. Real FCC results cover amount extraction.
+
 ## Run locally
 
 Install [Poppler and Tesseract](docs/deploy.md), then run:
