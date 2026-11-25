@@ -19,6 +19,8 @@ Open [http://127.0.0.1:8000](http://127.0.0.1:8000). The upload accepts up to ei
 
 ## Try the fictional demo
 
+[Watch the 69-second captioned browser recording](docs/demo.webm).
+
 ```sh
 python -m tools.synthetic --output var/demo --demo
 ```
