@@ -14,7 +14,7 @@ from .review import start
 ALLOWED = {".pdf", ".png", ".jpg", ".jpeg"}
 
 
-def ingest(store, filename, body, method, threshold):
+def ingest(store, filename, body, method, policy):
     if not body or len(body) > MAX_BYTES:
         raise ValueError("Please supply a file up to 15 MiB.")
     filename = Path(filename).name
@@ -36,11 +36,16 @@ def ingest(store, filename, body, method, threshold):
         pages = load_pages(source, directory)
         if not pages:
             raise ValueError("No readable pages.")
-        record = start(extract(pages, method), threshold, filename=filename, digest=sha256(body).hexdigest(),
-                       pages=[asdict(page) for page in pages])
+        extraction = extract(pages, method)
+        eligible = bool(policy and set(extraction["ocr"]) <= set(policy["ocr_engines"])
+                        and extraction["model"] in policy["thresholds"])
+        threshold = policy["thresholds"][extraction["model"]] if eligible else 0.0
+        record = start(extraction, threshold, filename=filename, digest=sha256(body).hexdigest(),
+                       pages=[asdict(page) for page in pages], auto_approval=eligible)
         store.insert(identifier, record)
         return identifier, record
     except BaseException:
         shutil.rmtree(directory)
         raise
+
 
