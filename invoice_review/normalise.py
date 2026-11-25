@@ -11,7 +11,7 @@ def decimal_value(text):
     if text is None:
         return None
     value = str(text).strip()
-    if not NUMBER.fullmatch(value):
+    if len(value) > 22 or not NUMBER.fullmatch(value):
         return None
     negative = value.startswith("(")
     value = re.sub(r"[$€£,()\s]", "", value)
@@ -47,4 +47,5 @@ def normalise(key, value):
                     pass
         return None
     return text
+
 
