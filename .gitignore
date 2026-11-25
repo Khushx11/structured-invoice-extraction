@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.py[cod]
+.DS_Store
+var/
+build/
+data/real/
+coverage/
+node_modules/
+
