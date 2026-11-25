@@ -12,14 +12,15 @@ def event(kind, **data):
     return {"event": kind, "at": datetime.now(timezone.utc).isoformat(), **data}
 
 
-def start(extraction, threshold, *, filename, digest, pages):
+def start(extraction, threshold, *, filename, digest, pages, auto_approval=True):
     reasons = readiness(extraction, threshold)
-    record = {"status": "review" if reasons else "approved", "revision": 0,
+    approved = auto_approval and not reasons
+    record = {"status": "approved" if approved else "review", "revision": 0,
               "source": {"filename": filename, "sha256": digest},
               "original": deepcopy(extraction), "current": deepcopy(extraction), "pages": pages,
-              "policy": {"threshold": threshold, "initial_reasons": reasons},
+              "policy": {"threshold": threshold, "initial_reasons": reasons, "auto_approval_enabled": auto_approval},
               "history": [event("extracted", model=extraction["model"]),
-                          event("routed_to_review" if reasons else "auto_approved")]}
+                          event("auto_approved" if approved else "routed_to_review")]}
     return record
 
 
@@ -72,4 +73,5 @@ def change(record, action):
 def display(record):
     return {**record, "checks": reconcile(record["current"]),
             "flags": readiness(record["current"], record["policy"]["threshold"])}
+
 
