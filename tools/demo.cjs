@@ -1,5 +1,7 @@
 "use strict";
 const fs = require("node:fs");
+const { spawn } = require("node:child_process");
+const { once } = require("node:events");
 const path = require("node:path");
 const { chromium } = require("playwright");
 const assert = require("node:assert/strict");
@@ -7,23 +9,45 @@ const assert = require("node:assert/strict");
 const baseline = process.env.INVOICE_URL || "http://127.0.0.1:8000";
 const examples = process.env.INVOICE_DEMO_DIR || "var/demo";
 const video = process.env.INVOICE_DEMO_VIDEO;
+const encoderPath = video && process.env.INVOICE_FFMPEG;
 const answers = JSON.parse(fs.readFileSync(path.join(examples, "answers.json"), "utf8"));
 const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 
 async function run() {
   const browser = await chromium.launch({ executablePath: process.env.INVOICE_CHROMIUM_PATH || undefined });
   let context;
-  let recording;
+  let recording, encoder, encoderDone, captureTask;
+  let captureRunning = false;
+  let complete = false;
   try {
     context = await browser.newContext({
       viewport: { width: 1280, height: 800 },
-      recordVideo: video ? { dir: path.dirname(video), size: { width: 1280, height: 800 } } : undefined,
+      recordVideo: video && !encoderPath ? { dir: path.dirname(video), size: { width: 1280, height: 800 } } : undefined,
     });
     const page = await context.newPage();
     recording = page.video();
     const errors = [];
     page.on("pageerror", error => errors.push(error.message));
     await page.goto(baseline);
+    if (encoderPath) {
+      encoder = spawn(encoderPath, ["-y", "-loglevel", "error", "-f", "image2pipe",
+        "-framerate", "5", "-vcodec", "mjpeg", "-i", "pipe:0", "-c:v", "libvpx-vp9", video],
+        { stdio: ["pipe", "ignore", "inherit"] });
+      encoderDone = once(encoder, "close");
+      captureRunning = true;
+      captureTask = (async () => {
+        const started = performance.now();
+        let count = 0;
+        while (captureRunning) {
+          const frame = await page.screenshot({ type: "jpeg", quality: 72 });
+          const due = 1 + Math.floor((performance.now() - started) / 200);
+          for (; count < due; count++) {
+            if (!encoder.stdin.write(frame)) await once(encoder.stdin, "drain");
+          }
+          await wait(170);
+        }
+      })();
+    }
     async function caption(value, milliseconds = 0) {
       if (!video) return;
       await page.evaluate(text => {
@@ -92,15 +116,25 @@ async function run() {
     assert.match(fs.readFileSync(await (await csv).path(), "utf8"), /line,description,quantity,unit_price,line_amount/);
     await caption("Approved. Export the structured JSON record or the line-items CSV.", 10500);
     assert.deepEqual(errors, []);
+    complete = true;
     console.log("Browser flow passed: auto-approval, OCR evidence highlight, correction, audit and both exports.");
   } finally {
+    if (captureTask) {
+      captureRunning = false;
+      await captureTask;
+      encoder.stdin.end();
+      const [code] = await encoderDone;
+      assert.equal(code, 0, "The video encoder exited with an error");
+      if (!complete) fs.rmSync(video, { force: true });
+    }
     if (context) await context.close();
-    if (video && recording) await recording.saveAs(video);
+    if (video && recording && complete) await recording.saveAs(video);
     await browser.close();
   }
 }
 
 run().catch(error => { console.error(error); process.exitCode = 1; });
+
 
 
 
