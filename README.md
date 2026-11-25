@@ -7,20 +7,23 @@ How much invoice processing can run without human review at a chosen observed er
 Upload an English PDF, PNG or JPEG, then inspect the extracted invoice beside its source. Review flags surface missing values and arithmetic discrepancies. Reviewers can correct fields, add or remove lines, approve records and export JSON or line-item CSV. The audit trail preserves the original extraction.
 
 
-## Invoice review workflow
+## What happens after extraction
 
 ```mermaid
-flowchart LR
-    A["PDF or scanned image"]
-    B["OCR and field extraction"]
-    C["Evidence and arithmetic checks"]
-    D["Review and approved export"]
-    A --> B --> C --> D
+flowchart TB
+    Scan["Invoice and source highlights"] --> Limits{"Exact demo fixture<br/>and matching model and OCR?"}
+    Limits -->|Ordinary upload| Review["Inspect and correct fields"]
+    Limits -->|Eligible demo| Checks{"Evidence and checks pass?"}
+    Checks -->|No| Review
+    Checks -->|Yes| Approved["Approved record"]
+    Review -->|Reviewer approves| Approved
+    Approved --> JSON["JSON record and history"]
+    Approved --> CSV["Line-item CSV"]
 ```
 
-![Automation coverage versus error on fictional invoices](results/coverage-error.png)
+![Automation coverage versus error for rules and spatial extraction on fictional invoices](results/coverage-error.png)
 
-The chart shows fictional invoice cohorts from the full-record evaluation. Real FCC results cover amount extraction.
+The chart covers fictional full-record tests. The FCC and ConfBench experiments measure amount extraction separately.
 
 ## Run locally
 
