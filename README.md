@@ -40,6 +40,10 @@ The spatial extractor auto-accepted **16 of 16** standard synthetic invoices and
 
 For the optional browser regression and recording, install Playwright and its Chromium build with `npm install --no-save playwright@1.62.1` and `npx playwright install chromium`. Start the matching macOS Vision demo server and run `node tools/demo.cjs`. Set `INVOICE_DEMO_VIDEO=var/demo.webm` to record the captioned flow.
 
+## External datasets
+
+An additional benchmark trains a text amount ranker on Hyperbots synthetic invoices and tests it on a held-out layout and real FCC invoices. It evaluates supplied OCR text and measures the limited transfer to FCC net amounts due. [External dataset provenance, commands and results](docs/external-data.md)
+
 ## Project documentation
 
 - [Versioned schema and evidence coordinates](docs/schema.md)
@@ -48,4 +52,5 @@ For the optional browser regression and recording, install Playwright and its Ch
 - [Local deployment and limitations](docs/deploy.md)
 
 This portfolio evaluation uses fictional documents only. The benchmark supports a separate permission-cleared real-scan manifest. The extraction revisions are deterministic text rules and spatial heuristics over revision-recorded OCR. Complex tables, unlabelled fields, atypical currencies and heavily degraded scans can require substantial manual review.
+
 
