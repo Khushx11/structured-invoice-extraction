@@ -50,6 +50,19 @@ def recognise(path, width, height):
 def orientation_score(words):
     anchors = {"invoice", "subtotal", "total", "tax", "description", "quantity", "amount", "supplier"}
     tokens = [re.sub(r"[^a-z]", "", item.text.lower()) for item in words]
-    return 6 * sum(token in anchors for token in tokens) + sum(
-        item.confidence for item, token in zip(words, tokens) if len(token) >= 3) / 5
+    score = 0.0
+    for item, token in zip(words, tokens):
+        if len(token) < 3:
+            continue
+        left, top, right, bottom = item.box
+        # Vision can transcribe sideways glyphs while returning vertical boxes.
+        # Score upright geometry before accepting a page orientation.
+        horizontal = (right - left) >= (bottom - top) * 1.2
+        if horizontal:
+            score += item.confidence / 5 + (6 if token in anchors else 0)
+            if token == "invoice" and top < .2:
+                score += 5
+        elif token in anchors:
+            score -= 4
+    return score
 
