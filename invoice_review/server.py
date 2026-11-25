@@ -123,6 +123,22 @@ def handler(store, policy):
     return Handler
 
 
+def demo_policy():
+    from hashlib import sha256
+    from tempfile import TemporaryDirectory
+
+    from tools.synthetic import generate_demo
+
+    policy = json.loads(POLICY.read_text())
+    with TemporaryDirectory() as directory:
+        root = Path(directory)
+        policy["fixture_sha256"] = [
+            sha256((root / fixture["path"]).read_bytes()).hexdigest()
+            for fixture in generate_demo(root)
+        ]
+    return policy
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--port", type=int, default=8000)
@@ -130,7 +146,7 @@ def main():
     parser.add_argument("--demo-policy", action="store_true",
                         help="Enable the measured synthetic automation policy for fictional demo files only")
     args = parser.parse_args()
-    policy = json.loads(POLICY.read_text()) if args.demo_policy else None
+    policy = demo_policy() if args.demo_policy else None
     with ThreadingHTTPServer(("127.0.0.1", args.port), handler(Store(args.data), policy)) as server:
         print(f"Invoice review at http://127.0.0.1:{server.server_port}", flush=True)
         server.serve_forever()

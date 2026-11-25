@@ -172,6 +172,12 @@ def generate(root, per_template=4):
     return records
 
 
+def generate_demo(root):
+    rows = [invoice(root, 7, i, scanned=True, ambiguous=bool(i)) for i in range(2)]
+    (root / "answers.json").write_text(json.dumps(rows, indent=2) + "\n")
+    return rows
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
@@ -179,8 +185,7 @@ def main():
     parser.add_argument("--per-template", type=int, default=4)
     args = parser.parse_args()
     if args.demo:
-        rows = [invoice(args.output, 7, i, scanned=True, ambiguous=bool(i)) for i in range(2)]
-        (args.output / "answers.json").write_text(json.dumps(rows, indent=2) + "\n")
+        generate_demo(args.output)
     else:
         generate(args.output, args.per_template)
 

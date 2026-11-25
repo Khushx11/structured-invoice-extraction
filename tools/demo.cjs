@@ -9,6 +9,8 @@ const assert = require("node:assert/strict");
 const baseline = process.env.INVOICE_URL || "http://127.0.0.1:8000";
 const examples = process.env.INVOICE_DEMO_DIR || "var/demo";
 const video = process.env.INVOICE_DEMO_VIDEO;
+const manual = process.env.INVOICE_DEMO_MANUAL === "1";
+const exportPath = process.env.INVOICE_DEMO_EXPORT;
 const encoderPath = video && process.env.INVOICE_FFMPEG;
 const answers = JSON.parse(fs.readFileSync(path.join(examples, "answers.json"), "utf8"));
 const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
@@ -78,8 +80,8 @@ async function run() {
     }
 
     await caption("Structured Invoice Extraction and Review · two fictional scan uploads", 6500);
-    const clean = await upload("clean-scan.png", "Auto-approved");
-    assert.equal(clean.policy.auto_approval_enabled, true);
+    const clean = await upload("clean-scan.png", manual ? "Needs review" : "Auto-approved");
+    assert.equal(clean.policy.auto_approval_enabled, !manual);
     await caption("Clean scan: required values have traceable evidence and all arithmetic checks pass.", 10500);
     await caption("Next, upload a scan with an inconsistent line amount.", 5000);
     const ambiguous = await upload("ambiguous-scan.png", "Needs review");
@@ -104,12 +106,17 @@ async function run() {
     await page.getByText("Audit trail", {exact: true}).click();
     assert.match(await page.locator("#history").innerText(), /corrected/);
     await caption("The audit trail records the before and after amounts.", 7500);
+    if (Object.keys(corrected.flags).length) {
+      await page.getByLabel("Approval note").fill("Verified remaining fields against the fictional scan.");
+    }
     await page.getByRole("button", {name: "Approve invoice"}).click();
     await page.getByText("Approved", {exact: true}).waitFor();
     const json = page.waitForEvent("download");
     await page.getByRole("link", {name: "Export JSON"}).click();
     const downloaded = await json;
-    const approval = JSON.parse(fs.readFileSync(await downloaded.path(), "utf8"));
+    const approvedJson = fs.readFileSync(await downloaded.path(), "utf8");
+    const approval = JSON.parse(approvedJson);
+    if (exportPath) fs.writeFileSync(exportPath, approvedJson);
     assert.ok(approval.history.some(event => event.event === "approved"));
     const csv = page.waitForEvent("download");
     await page.getByRole("link", {name: "Export CSV"}).click();
@@ -117,7 +124,7 @@ async function run() {
     await caption("Approved. Export the structured JSON record or the line-items CSV.", 10500);
     assert.deepEqual(errors, []);
     complete = true;
-    console.log("Browser flow passed: auto-approval, OCR evidence highlight, correction, audit and both exports.");
+    console.log("Browser flow passed: upload, OCR evidence highlight, correction, audit and both exports.");
   } finally {
     if (captureTask) {
       captureRunning = false;

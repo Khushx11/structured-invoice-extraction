@@ -23,6 +23,7 @@ def ingest(store, filename, body, method, policy, *, enhance=False):
         raise ValueError("Choose a PDF, PNG or JPEG.")
     if suffix == ".pdf" and not body.startswith(b"%PDF-"):
         raise ValueError("The uploaded file is not a PDF.")
+    digest = sha256(body).hexdigest()
     identifier = uuid4().hex
     directory = store.root / identifier
     directory.mkdir()
@@ -37,10 +38,11 @@ def ingest(store, filename, body, method, policy, *, enhance=False):
         if not pages:
             raise ValueError("No readable pages.")
         extraction = extract(pages, method)
-        eligible = bool(policy and set(extraction["ocr"]) <= set(policy["ocr_engines"])
+        eligible = bool(policy and not enhance and digest in policy.get("fixture_sha256", ())
+                        and set(extraction["ocr"]) <= set(policy["ocr_engines"])
                         and extraction["model"] in policy["thresholds"])
         threshold = policy["thresholds"][extraction["model"]] if eligible else 0.0
-        record = start(extraction, threshold, filename=filename, digest=sha256(body).hexdigest(),
+        record = start(extraction, threshold, filename=filename, digest=digest,
                        pages=[asdict(page) for page in pages], auto_approval=eligible)
         store.insert(identifier, record)
         return identifier, record

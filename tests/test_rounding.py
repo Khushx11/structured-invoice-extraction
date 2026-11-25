@@ -22,3 +22,21 @@ class ArithmeticTests(unittest.TestCase):
         record["header"]["tax"]["value"] = None
         self.assertEqual(reconcile(record)[-1]["status"], "unavailable")
 
+    def test_large_accepted_operands_reconcile_without_decimal_overflow(self):
+        record = empty_extraction("test", [])
+        row = blank_item()
+        for key in ("quantity", "unit_price"):
+            row[key]["value"] = "9999999999999999999999"
+        row["line_amount"]["value"] = "1"
+        record["line_items"] = [row]
+        check = reconcile(record)[0]
+        self.assertEqual(check["status"], "fail")
+        self.assertEqual(check["expected"], str(9999999999999999999999 ** 2) + ".00")
+
+    def test_thousands_groups_must_be_complete(self):
+        from invoice_review.normalise import decimal_value
+
+        self.assertEqual(decimal_value("($1,234.50)"), "-1234.50")
+        self.assertEqual(decimal_value("1234567.80"), "1234567.80")
+        for malformed in ("1,23", "1234,567", "1,,000", "1,"):
+            self.assertIsNone(decimal_value(malformed))

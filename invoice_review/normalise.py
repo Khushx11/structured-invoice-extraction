@@ -3,7 +3,8 @@ from datetime import datetime
 from decimal import Decimal, InvalidOperation
 import re
 
-NUMBER = re.compile(r"(?:[+-]?[$€£]?\s*\d[\d,]*(?:\.\d+)?|\([$€£]?\d[\d,]*(?:\.\d+)?\))")
+DIGITS = r"(?:[0-9]+|[0-9]{1,3}(?:,[0-9]{3})+)(?:\.[0-9]+)?"
+NUMBER = re.compile(rf"(?:[+-]?[$€£]?\s*{DIGITS}|\([$€£]?{DIGITS}\))")
 CURRENCIES = {"AUD", "USD", "NZD", "CAD", "GBP", "EUR", "SGD", "INR"}
 
 
