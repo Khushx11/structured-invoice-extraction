@@ -24,7 +24,7 @@ ASSETS = {"/": ("index.html", "text/html"), "/app.js": ("app.js", "text/javascri
           "/style.css": ("style.css", "text/css")}
 
 
-def handler(store, threshold):
+def handler(store, policy):
     queue = BoundedSemaphore(2)
 
     class Handler(BaseHTTPRequestHandler):
@@ -52,6 +52,9 @@ def handler(store, threshold):
 
         def dispatch(self, write):
             url = urlsplit(self.path)
+            host = self.headers.get("Host", "")
+            if host not in {f"127.0.0.1:{self.server.server_port}", f"localhost:{self.server.server_port}"}:
+                return self.json({"error": "Use the loopback application URL."}, 403)
             if write:
                 # Only local UI requests with a matching Origin can mutate state.
                 if self.headers.get("Origin") != f"http://{self.headers.get('Host')}":
@@ -64,7 +67,7 @@ def handler(store, threshold):
                     if not queue.acquire(blocking=False):
                         return self.json({"error": "Two invoices are already processing. Try again shortly."}, 429)
                     try:
-                        identifier, record = ingest(store, filename, self.body(MAX_BYTES), method, threshold)
+                        identifier, record = ingest(store, filename, self.body(MAX_BYTES), method, policy)
                     finally:
                         queue.release()
                     return self.json({"id": identifier, **display(record)}, 201)
@@ -121,13 +124,16 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--data", type=Path, default=Path("var"))
+    parser.add_argument("--demo-policy", action="store_true",
+                        help="Enable the measured synthetic automation policy for fictional demo files only")
     args = parser.parse_args()
-    threshold = json.loads(POLICY.read_text())["threshold"] if POLICY.is_file() else 1.01
-    with ThreadingHTTPServer(("127.0.0.1", args.port), handler(Store(args.data), threshold)) as server:
+    policy = json.loads(POLICY.read_text()) if args.demo_policy else None
+    with ThreadingHTTPServer(("127.0.0.1", args.port), handler(Store(args.data), policy)) as server:
         print(f"Invoice review at http://127.0.0.1:{server.server_port}", flush=True)
         server.serve_forever()
 
 
 if __name__ == "__main__":
     main()
+
 
