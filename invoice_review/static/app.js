@@ -180,7 +180,8 @@ el("upload").addEventListener("submit", async event => {
   el("process").disabled = true;
   el("message").textContent = "Reading document and extracting fields…";
   try {
-    active = await request("/api/invoices?method=" + encodeURIComponent(el("method").value), {
+    active = await request("/api/invoices?method=" + encodeURIComponent(el("method").value)
+      + (el("enhance-scan").checked ? "&enhance=1" : ""), {
       method: "POST", headers: {"X-Invoice-Filename": encodeURIComponent(file.name)}, body: file,
     });
     page = 1;
@@ -195,4 +196,3 @@ el("upload").addEventListener("submit", async event => {
     el("process").disabled = false;
   }
 });
-

@@ -60,14 +60,17 @@ def handler(store, policy):
                 if self.headers.get("Origin") != f"http://{self.headers.get('Host')}":
                     return self.json({"error": "Open the local application to submit changes."}, 403)
                 if url.path == "/api/invoices":
-                    method = parse_qs(url.query).get("method", ["layout"])[0]
+                    options = parse_qs(url.query)
+                    method = options.get("method", ["layout"])[0]
+                    enhance = options.get("enhance", ["0"])[0] == "1"
                     if method not in MODELS:
                         raise ValueError("Unknown extraction method.")
                     filename = unquote(self.headers.get("X-Invoice-Filename", ""))[:250]
                     if not queue.acquire(blocking=False):
                         return self.json({"error": "Two invoices are already processing. Try again shortly."}, 429)
                     try:
-                        identifier, record = ingest(store, filename, self.body(MAX_BYTES), method, policy)
+                        identifier, record = ingest(store, filename, self.body(MAX_BYTES), method, policy,
+                                                    enhance=enhance)
                     finally:
                         queue.release()
                     return self.json({"id": identifier, **display(record)}, 201)
@@ -135,5 +138,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
