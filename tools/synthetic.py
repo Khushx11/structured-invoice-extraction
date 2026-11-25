@@ -25,11 +25,15 @@ TEMPLATES = (
     ("Sample Alder Tools", "dev", 0, (67, 365, 445, 528), False),
     ("Sample Boreal Works", "dev", 1, (51, 330, 444, 546), True),
     ("Sample Cinder Studio", "dev", 2, (79, 356, 452, 533), False),
-    ("Sample Drift Supplies", "test", 3, (58, 349, 427, 522), False),
-    ("Sample Elm Repairs", "test", 0, (92, 412, 334, 530), True),
-    ("Sample Fjord Paper", "test", 2, (39, 310, 432, 560), True),
-    ("Sample Grove Parts", "test", 1, (66, 352, 436, 517), False),
+    ("Sample Drift Supplies", "pilot", 3, (58, 349, 427, 522), False),
+    ("Sample Elm Repairs", "pilot", 0, (92, 412, 334, 530), True),
+    ("Sample Fjord Paper", "pilot", 2, (39, 310, 432, 560), True),
+    ("Sample Grove Parts", "pilot", 1, (66, 352, 436, 517), False),
     ("Sample Harbour Studio", "demo", 0, (58, 349, 440, 532), True),
+    ("Sample Indigo Timber", "test", 1, (83, 338, 431, 551), False),
+    ("Sample Juniper Metals", "test", 3, (45, 425, 335, 543), True),
+    ("Sample Kauri Design", "test", 0, (68, 316, 445, 565), True),
+    ("Sample Linden Packaging", "test", 2, (80, 347, 462, 539), False),
 )
 ITEMS = ("Cable clips", "Desk brackets", "Paper sleeves", "Corner guards", "Panel fasteners",
          "Sample cartons", "Storage trays", "Blank labels", "Protective wraps", "Packing spacers")
@@ -155,11 +159,13 @@ def invoice(root, template, index, *, scanned=False, stress=None, second_page=Fa
 
 def generate(root, per_template=4):
     records = []
-    for template in range(7):
+    for template, (_, split, _, _, _) in enumerate(TEMPLATES):
+        if split not in {"dev", "test"}:
+            continue
         for i in range(per_template):
             records.append(invoice(root, template, i, scanned=i % 2 == 0,
                                    second_page=i == 2, blank=i == 3))
-        if template >= 3:
+        if split == "test":
             for i, stress in enumerate(("rotated", "faded"), 10):
                 records.append(invoice(root, template, i, stress=stress, second_page=i == 11))
     (root / "manifest.json").write_text(json.dumps(records, indent=2) + "\n")
@@ -181,5 +187,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
