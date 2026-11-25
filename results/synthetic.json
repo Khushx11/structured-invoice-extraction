@@ -1,0 +1,961 @@
+{
+  "kind": "synthetic",
+  "ocr_engines": [
+    "apple-vision/macos-27.2.1/accurate/en-US+en-GB",
+    "blank-page",
+    "poppler-embedded-text"
+  ],
+  "cohort_templates": {
+    "dev": [
+      "Sample Alder Tools",
+      "Sample Boreal Works",
+      "Sample Cinder Studio"
+    ],
+    "test": [
+      "Sample Indigo Timber",
+      "Sample Juniper Metals",
+      "Sample Kauri Design",
+      "Sample Linden Packaging"
+    ],
+    "stress": [
+      "Sample Indigo Timber",
+      "Sample Juniper Metals",
+      "Sample Kauri Design",
+      "Sample Linden Packaging"
+    ]
+  },
+  "methods": {
+    "rules": {
+      "model": "ocr-rules/1.0.0",
+      "selected_threshold": 1.0,
+      "metrics": {
+        "dev": {
+          "invoices": 12,
+          "fully_correct": 8,
+          "header_exact_match": {
+            "supplier_name": 0.6666666666666666,
+            "invoice_number": 0.6666666666666666,
+            "invoice_date": 0.6666666666666666,
+            "currency": 0.6666666666666666,
+            "subtotal": 1.0,
+            "tax": 1.0,
+            "discount": 1.0,
+            "total": 1.0
+          },
+          "header_failures": {
+            "supplier_name": 4,
+            "invoice_number": 4,
+            "invoice_date": 4,
+            "currency": 4,
+            "subtotal": 0,
+            "tax": 0,
+            "discount": 0,
+            "total": 0
+          },
+          "line_rows": {
+            "matches": 42,
+            "predicted": 42,
+            "expected": 42,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "numeric_error": {
+            "subtotal": {
+              "mae": 0.0,
+              "pairs": 12
+            },
+            "tax": {
+              "mae": 0.0,
+              "pairs": 12
+            },
+            "discount": {
+              "mae": 0.0,
+              "pairs": 12
+            },
+            "total": {
+              "mae": 0.0,
+              "pairs": 12
+            },
+            "unit_price": {
+              "mae": 0.0,
+              "pairs": 42
+            },
+            "line_amount": {
+              "mae": 0.0,
+              "pairs": 42
+            }
+          },
+          "reconciliation_failure_rate": 0.0,
+          "reconciliation_unavailable_rate": 0.0,
+          "p95_processing_seconds": 1.669049376010662
+        },
+        "test": {
+          "invoices": 16,
+          "fully_correct": 8,
+          "header_exact_match": {
+            "supplier_name": 0.5,
+            "invoice_number": 0.5,
+            "invoice_date": 0.5,
+            "currency": 0.5,
+            "subtotal": 1.0,
+            "tax": 1.0,
+            "discount": 1.0,
+            "total": 1.0
+          },
+          "header_failures": {
+            "supplier_name": 8,
+            "invoice_number": 8,
+            "invoice_date": 8,
+            "currency": 8,
+            "subtotal": 0,
+            "tax": 0,
+            "discount": 0,
+            "total": 0
+          },
+          "line_rows": {
+            "matches": 42,
+            "predicted": 56,
+            "expected": 56,
+            "precision": 0.75,
+            "recall": 0.75
+          },
+          "numeric_error": {
+            "subtotal": {
+              "mae": 0.0,
+              "pairs": 16
+            },
+            "tax": {
+              "mae": 0.0,
+              "pairs": 16
+            },
+            "discount": {
+              "mae": 0.0,
+              "pairs": 16
+            },
+            "total": {
+              "mae": 0.0,
+              "pairs": 16
+            },
+            "unit_price": {
+              "mae": 2.670892857142857,
+              "pairs": 56
+            },
+            "line_amount": {
+              "mae": 0.0,
+              "pairs": 56
+            }
+          },
+          "reconciliation_failure_rate": 0.0,
+          "reconciliation_unavailable_rate": 0.0,
+          "p95_processing_seconds": 1.861686042015208
+        },
+        "stress": {
+          "invoices": 8,
+          "fully_correct": 2,
+          "header_exact_match": {
+            "supplier_name": 0.25,
+            "invoice_number": 0.25,
+            "invoice_date": 0.375,
+            "currency": 0.375,
+            "subtotal": 0.625,
+            "tax": 0.5,
+            "discount": 0.75,
+            "total": 0.75
+          },
+          "header_failures": {
+            "supplier_name": 6,
+            "invoice_number": 6,
+            "invoice_date": 5,
+            "currency": 5,
+            "subtotal": 3,
+            "tax": 4,
+            "discount": 2,
+            "total": 2
+          },
+          "line_rows": {
+            "matches": 9,
+            "predicted": 12,
+            "expected": 32,
+            "precision": 0.75,
+            "recall": 0.28125
+          },
+          "numeric_error": {
+            "subtotal": {
+              "mae": 0.0,
+              "pairs": 5
+            },
+            "tax": {
+              "mae": 0.0,
+              "pairs": 4
+            },
+            "discount": {
+              "mae": 0.0,
+              "pairs": 6
+            },
+            "total": {
+              "mae": 0.0,
+              "pairs": 6
+            },
+            "unit_price": {
+              "mae": 2.966666666666667,
+              "pairs": 12
+            },
+            "line_amount": {
+              "mae": 0.0,
+              "pairs": 12
+            }
+          },
+          "reconciliation_failure_rate": 0.0,
+          "reconciliation_unavailable_rate": 0.5,
+          "p95_processing_seconds": 1.8869967919890769
+        }
+      },
+      "operating_points": {
+        "dev": {
+          "threshold": 1.0,
+          "total": 12,
+          "accepted": 8,
+          "wrong_accepted": 0,
+          "coverage": 0.6666666666666666,
+          "routed_to_review": 0.33333333333333337,
+          "accepted_error": 0.0
+        },
+        "test": {
+          "threshold": 1.0,
+          "total": 16,
+          "accepted": 8,
+          "wrong_accepted": 0,
+          "coverage": 0.5,
+          "routed_to_review": 0.5,
+          "accepted_error": 0.0
+        },
+        "stress": {
+          "threshold": 1.0,
+          "total": 8,
+          "accepted": 2,
+          "wrong_accepted": 0,
+          "coverage": 0.25,
+          "routed_to_review": 0.75,
+          "accepted_error": 0.0
+        }
+      },
+      "coverage_error_curve": {
+        "dev": [
+          {
+            "threshold": 0.5,
+            "total": 12,
+            "accepted": 8,
+            "wrong_accepted": 0,
+            "coverage": 0.6666666666666666,
+            "routed_to_review": 0.33333333333333337,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.65,
+            "total": 12,
+            "accepted": 8,
+            "wrong_accepted": 0,
+            "coverage": 0.6666666666666666,
+            "routed_to_review": 0.33333333333333337,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.75,
+            "total": 12,
+            "accepted": 8,
+            "wrong_accepted": 0,
+            "coverage": 0.6666666666666666,
+            "routed_to_review": 0.33333333333333337,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.85,
+            "total": 12,
+            "accepted": 8,
+            "wrong_accepted": 0,
+            "coverage": 0.6666666666666666,
+            "routed_to_review": 0.33333333333333337,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.9,
+            "total": 12,
+            "accepted": 8,
+            "wrong_accepted": 0,
+            "coverage": 0.6666666666666666,
+            "routed_to_review": 0.33333333333333337,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.95,
+            "total": 12,
+            "accepted": 8,
+            "wrong_accepted": 0,
+            "coverage": 0.6666666666666666,
+            "routed_to_review": 0.33333333333333337,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.98,
+            "total": 12,
+            "accepted": 8,
+            "wrong_accepted": 0,
+            "coverage": 0.6666666666666666,
+            "routed_to_review": 0.33333333333333337,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 1.0,
+            "total": 12,
+            "accepted": 8,
+            "wrong_accepted": 0,
+            "coverage": 0.6666666666666666,
+            "routed_to_review": 0.33333333333333337,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 1.01,
+            "total": 12,
+            "accepted": 0,
+            "wrong_accepted": 0,
+            "coverage": 0.0,
+            "routed_to_review": 1.0,
+            "accepted_error": null
+          }
+        ],
+        "test": [
+          {
+            "threshold": 0.5,
+            "total": 16,
+            "accepted": 8,
+            "wrong_accepted": 0,
+            "coverage": 0.5,
+            "routed_to_review": 0.5,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.65,
+            "total": 16,
+            "accepted": 8,
+            "wrong_accepted": 0,
+            "coverage": 0.5,
+            "routed_to_review": 0.5,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.75,
+            "total": 16,
+            "accepted": 8,
+            "wrong_accepted": 0,
+            "coverage": 0.5,
+            "routed_to_review": 0.5,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.85,
+            "total": 16,
+            "accepted": 8,
+            "wrong_accepted": 0,
+            "coverage": 0.5,
+            "routed_to_review": 0.5,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.9,
+            "total": 16,
+            "accepted": 8,
+            "wrong_accepted": 0,
+            "coverage": 0.5,
+            "routed_to_review": 0.5,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.95,
+            "total": 16,
+            "accepted": 8,
+            "wrong_accepted": 0,
+            "coverage": 0.5,
+            "routed_to_review": 0.5,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.98,
+            "total": 16,
+            "accepted": 8,
+            "wrong_accepted": 0,
+            "coverage": 0.5,
+            "routed_to_review": 0.5,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 1.0,
+            "total": 16,
+            "accepted": 8,
+            "wrong_accepted": 0,
+            "coverage": 0.5,
+            "routed_to_review": 0.5,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 1.01,
+            "total": 16,
+            "accepted": 0,
+            "wrong_accepted": 0,
+            "coverage": 0.0,
+            "routed_to_review": 1.0,
+            "accepted_error": null
+          }
+        ],
+        "stress": [
+          {
+            "threshold": 0.5,
+            "total": 8,
+            "accepted": 2,
+            "wrong_accepted": 0,
+            "coverage": 0.25,
+            "routed_to_review": 0.75,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.65,
+            "total": 8,
+            "accepted": 2,
+            "wrong_accepted": 0,
+            "coverage": 0.25,
+            "routed_to_review": 0.75,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.75,
+            "total": 8,
+            "accepted": 2,
+            "wrong_accepted": 0,
+            "coverage": 0.25,
+            "routed_to_review": 0.75,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.85,
+            "total": 8,
+            "accepted": 2,
+            "wrong_accepted": 0,
+            "coverage": 0.25,
+            "routed_to_review": 0.75,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.9,
+            "total": 8,
+            "accepted": 2,
+            "wrong_accepted": 0,
+            "coverage": 0.25,
+            "routed_to_review": 0.75,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.95,
+            "total": 8,
+            "accepted": 2,
+            "wrong_accepted": 0,
+            "coverage": 0.25,
+            "routed_to_review": 0.75,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.98,
+            "total": 8,
+            "accepted": 2,
+            "wrong_accepted": 0,
+            "coverage": 0.25,
+            "routed_to_review": 0.75,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 1.0,
+            "total": 8,
+            "accepted": 2,
+            "wrong_accepted": 0,
+            "coverage": 0.25,
+            "routed_to_review": 0.75,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 1.01,
+            "total": 8,
+            "accepted": 0,
+            "wrong_accepted": 0,
+            "coverage": 0.0,
+            "routed_to_review": 1.0,
+            "accepted_error": null
+          }
+        ]
+      }
+    },
+    "layout": {
+      "model": "ocr-spatial-columns/1.0.0",
+      "selected_threshold": 1.0,
+      "metrics": {
+        "dev": {
+          "invoices": 12,
+          "fully_correct": 12,
+          "header_exact_match": {
+            "supplier_name": 1.0,
+            "invoice_number": 1.0,
+            "invoice_date": 1.0,
+            "currency": 1.0,
+            "subtotal": 1.0,
+            "tax": 1.0,
+            "discount": 1.0,
+            "total": 1.0
+          },
+          "header_failures": {
+            "supplier_name": 0,
+            "invoice_number": 0,
+            "invoice_date": 0,
+            "currency": 0,
+            "subtotal": 0,
+            "tax": 0,
+            "discount": 0,
+            "total": 0
+          },
+          "line_rows": {
+            "matches": 42,
+            "predicted": 42,
+            "expected": 42,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "numeric_error": {
+            "subtotal": {
+              "mae": 0.0,
+              "pairs": 12
+            },
+            "tax": {
+              "mae": 0.0,
+              "pairs": 12
+            },
+            "discount": {
+              "mae": 0.0,
+              "pairs": 12
+            },
+            "total": {
+              "mae": 0.0,
+              "pairs": 12
+            },
+            "unit_price": {
+              "mae": 0.0,
+              "pairs": 42
+            },
+            "line_amount": {
+              "mae": 0.0,
+              "pairs": 42
+            }
+          },
+          "reconciliation_failure_rate": 0.0,
+          "reconciliation_unavailable_rate": 0.0,
+          "p95_processing_seconds": 1.6690232920227572
+        },
+        "test": {
+          "invoices": 16,
+          "fully_correct": 16,
+          "header_exact_match": {
+            "supplier_name": 1.0,
+            "invoice_number": 1.0,
+            "invoice_date": 1.0,
+            "currency": 1.0,
+            "subtotal": 1.0,
+            "tax": 1.0,
+            "discount": 1.0,
+            "total": 1.0
+          },
+          "header_failures": {
+            "supplier_name": 0,
+            "invoice_number": 0,
+            "invoice_date": 0,
+            "currency": 0,
+            "subtotal": 0,
+            "tax": 0,
+            "discount": 0,
+            "total": 0
+          },
+          "line_rows": {
+            "matches": 56,
+            "predicted": 56,
+            "expected": 56,
+            "precision": 1.0,
+            "recall": 1.0
+          },
+          "numeric_error": {
+            "subtotal": {
+              "mae": 0.0,
+              "pairs": 16
+            },
+            "tax": {
+              "mae": 0.0,
+              "pairs": 16
+            },
+            "discount": {
+              "mae": 0.0,
+              "pairs": 16
+            },
+            "total": {
+              "mae": 0.0,
+              "pairs": 16
+            },
+            "unit_price": {
+              "mae": 0.0,
+              "pairs": 56
+            },
+            "line_amount": {
+              "mae": 0.0,
+              "pairs": 56
+            }
+          },
+          "reconciliation_failure_rate": 0.0,
+          "reconciliation_unavailable_rate": 0.0,
+          "p95_processing_seconds": 1.8615954590204637
+        },
+        "stress": {
+          "invoices": 8,
+          "fully_correct": 4,
+          "header_exact_match": {
+            "supplier_name": 0.5,
+            "invoice_number": 0.5,
+            "invoice_date": 0.625,
+            "currency": 0.625,
+            "subtotal": 0.625,
+            "tax": 0.5,
+            "discount": 0.75,
+            "total": 0.75
+          },
+          "header_failures": {
+            "supplier_name": 4,
+            "invoice_number": 4,
+            "invoice_date": 3,
+            "currency": 3,
+            "subtotal": 3,
+            "tax": 4,
+            "discount": 2,
+            "total": 2
+          },
+          "line_rows": {
+            "matches": 12,
+            "predicted": 12,
+            "expected": 32,
+            "precision": 1.0,
+            "recall": 0.375
+          },
+          "numeric_error": {
+            "subtotal": {
+              "mae": 0.0,
+              "pairs": 5
+            },
+            "tax": {
+              "mae": 0.0,
+              "pairs": 4
+            },
+            "discount": {
+              "mae": 0.0,
+              "pairs": 6
+            },
+            "total": {
+              "mae": 0.0,
+              "pairs": 6
+            },
+            "unit_price": {
+              "mae": 0.0,
+              "pairs": 12
+            },
+            "line_amount": {
+              "mae": 0.0,
+              "pairs": 12
+            }
+          },
+          "reconciliation_failure_rate": 0.0,
+          "reconciliation_unavailable_rate": 0.5,
+          "p95_processing_seconds": 1.8869354579946958
+        }
+      },
+      "operating_points": {
+        "dev": {
+          "threshold": 1.0,
+          "total": 12,
+          "accepted": 12,
+          "wrong_accepted": 0,
+          "coverage": 1.0,
+          "routed_to_review": 0.0,
+          "accepted_error": 0.0
+        },
+        "test": {
+          "threshold": 1.0,
+          "total": 16,
+          "accepted": 16,
+          "wrong_accepted": 0,
+          "coverage": 1.0,
+          "routed_to_review": 0.0,
+          "accepted_error": 0.0
+        },
+        "stress": {
+          "threshold": 1.0,
+          "total": 8,
+          "accepted": 4,
+          "wrong_accepted": 0,
+          "coverage": 0.5,
+          "routed_to_review": 0.5,
+          "accepted_error": 0.0
+        }
+      },
+      "coverage_error_curve": {
+        "dev": [
+          {
+            "threshold": 0.5,
+            "total": 12,
+            "accepted": 12,
+            "wrong_accepted": 0,
+            "coverage": 1.0,
+            "routed_to_review": 0.0,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.65,
+            "total": 12,
+            "accepted": 12,
+            "wrong_accepted": 0,
+            "coverage": 1.0,
+            "routed_to_review": 0.0,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.75,
+            "total": 12,
+            "accepted": 12,
+            "wrong_accepted": 0,
+            "coverage": 1.0,
+            "routed_to_review": 0.0,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.85,
+            "total": 12,
+            "accepted": 12,
+            "wrong_accepted": 0,
+            "coverage": 1.0,
+            "routed_to_review": 0.0,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.9,
+            "total": 12,
+            "accepted": 12,
+            "wrong_accepted": 0,
+            "coverage": 1.0,
+            "routed_to_review": 0.0,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.95,
+            "total": 12,
+            "accepted": 12,
+            "wrong_accepted": 0,
+            "coverage": 1.0,
+            "routed_to_review": 0.0,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.98,
+            "total": 12,
+            "accepted": 12,
+            "wrong_accepted": 0,
+            "coverage": 1.0,
+            "routed_to_review": 0.0,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 1.0,
+            "total": 12,
+            "accepted": 12,
+            "wrong_accepted": 0,
+            "coverage": 1.0,
+            "routed_to_review": 0.0,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 1.01,
+            "total": 12,
+            "accepted": 0,
+            "wrong_accepted": 0,
+            "coverage": 0.0,
+            "routed_to_review": 1.0,
+            "accepted_error": null
+          }
+        ],
+        "test": [
+          {
+            "threshold": 0.5,
+            "total": 16,
+            "accepted": 16,
+            "wrong_accepted": 0,
+            "coverage": 1.0,
+            "routed_to_review": 0.0,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.65,
+            "total": 16,
+            "accepted": 16,
+            "wrong_accepted": 0,
+            "coverage": 1.0,
+            "routed_to_review": 0.0,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.75,
+            "total": 16,
+            "accepted": 16,
+            "wrong_accepted": 0,
+            "coverage": 1.0,
+            "routed_to_review": 0.0,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.85,
+            "total": 16,
+            "accepted": 16,
+            "wrong_accepted": 0,
+            "coverage": 1.0,
+            "routed_to_review": 0.0,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.9,
+            "total": 16,
+            "accepted": 16,
+            "wrong_accepted": 0,
+            "coverage": 1.0,
+            "routed_to_review": 0.0,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.95,
+            "total": 16,
+            "accepted": 16,
+            "wrong_accepted": 0,
+            "coverage": 1.0,
+            "routed_to_review": 0.0,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.98,
+            "total": 16,
+            "accepted": 16,
+            "wrong_accepted": 0,
+            "coverage": 1.0,
+            "routed_to_review": 0.0,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 1.0,
+            "total": 16,
+            "accepted": 16,
+            "wrong_accepted": 0,
+            "coverage": 1.0,
+            "routed_to_review": 0.0,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 1.01,
+            "total": 16,
+            "accepted": 0,
+            "wrong_accepted": 0,
+            "coverage": 0.0,
+            "routed_to_review": 1.0,
+            "accepted_error": null
+          }
+        ],
+        "stress": [
+          {
+            "threshold": 0.5,
+            "total": 8,
+            "accepted": 4,
+            "wrong_accepted": 0,
+            "coverage": 0.5,
+            "routed_to_review": 0.5,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.65,
+            "total": 8,
+            "accepted": 4,
+            "wrong_accepted": 0,
+            "coverage": 0.5,
+            "routed_to_review": 0.5,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.75,
+            "total": 8,
+            "accepted": 4,
+            "wrong_accepted": 0,
+            "coverage": 0.5,
+            "routed_to_review": 0.5,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.85,
+            "total": 8,
+            "accepted": 4,
+            "wrong_accepted": 0,
+            "coverage": 0.5,
+            "routed_to_review": 0.5,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.9,
+            "total": 8,
+            "accepted": 4,
+            "wrong_accepted": 0,
+            "coverage": 0.5,
+            "routed_to_review": 0.5,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.95,
+            "total": 8,
+            "accepted": 4,
+            "wrong_accepted": 0,
+            "coverage": 0.5,
+            "routed_to_review": 0.5,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 0.98,
+            "total": 8,
+            "accepted": 4,
+            "wrong_accepted": 0,
+            "coverage": 0.5,
+            "routed_to_review": 0.5,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 1.0,
+            "total": 8,
+            "accepted": 4,
+            "wrong_accepted": 0,
+            "coverage": 0.5,
+            "routed_to_review": 0.5,
+            "accepted_error": 0.0
+          },
+          {
+            "threshold": 1.01,
+            "total": 8,
+            "accepted": 0,
+            "wrong_accepted": 0,
+            "coverage": 0.0,
+            "routed_to_review": 1.0,
+            "accepted_error": null
+          }
+        ]
+      }
+    }
+  }
+}

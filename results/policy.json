@@ -1,0 +1,12 @@
+{
+  "kind": "synthetic-demo",
+  "ocr_engines": [
+    "apple-vision/macos-27.2.1/accurate/en-US+en-GB",
+    "blank-page",
+    "poppler-embedded-text"
+  ],
+  "thresholds": {
+    "ocr-rules/1.0.0": 1.0,
+    "ocr-spatial-columns/1.0.0": 1.0
+  }
+}
