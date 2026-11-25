@@ -11,7 +11,7 @@ const answers = JSON.parse(fs.readFileSync(path.join(examples, "answers.json"), 
 const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 
 async function run() {
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ executablePath: process.env.INVOICE_CHROMIUM_PATH || undefined });
   let context;
   let recording;
   try {
@@ -47,7 +47,7 @@ async function run() {
       const result = await response;
       const body = await result.json();
       assert.equal(result.status(), 201, JSON.stringify(body));
-      await page.locator("#status").getByText(expected, {exact: true}).waitFor();
+      await page.getByText(expected, {exact: true}).waitFor();
       return body;
     }
 
@@ -77,7 +77,7 @@ async function run() {
     assert.match(await page.locator("#history").innerText(), /corrected/);
     await caption("The audit trail records the before and after amounts.", 7500);
     await page.getByRole("button", {name: "Approve invoice"}).click();
-    await page.locator("#status").getByText("Approved", {exact: true}).waitFor();
+    await page.getByText("Approved", {exact: true}).waitFor();
     const json = page.waitForEvent("download");
     await page.getByRole("link", {name: "Export JSON"}).click();
     const downloaded = await json;
@@ -97,4 +97,5 @@ async function run() {
 }
 
 run().catch(error => { console.error(error); process.exitCode = 1; });
+
 
