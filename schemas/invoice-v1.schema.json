@@ -1,0 +1,300 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Khushx11/structured-invoice-extraction/tree/main/schemas/invoice-v1.schema.json",
+  "title": "Approved structured invoice",
+  "type": "object",
+  "required": [
+    "status",
+    "revision",
+    "original",
+    "current",
+    "pages",
+    "source",
+    "policy",
+    "history",
+    "checks",
+    "flags"
+  ],
+  "properties": {
+    "status": {
+      "const": "approved"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "original": {
+      "$ref": "#/$defs/extraction"
+    },
+    "current": {
+      "$ref": "#/$defs/extraction"
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "number",
+          "image",
+          "width",
+          "height",
+          "words",
+          "engine",
+          "rotation",
+          "blank",
+          "low_resolution"
+        ],
+        "properties": {
+          "number": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "image": {
+            "type": "string"
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "words": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "text",
+                "box",
+                "confidence"
+              ],
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "box": {
+                  "$ref": "#/$defs/box"
+                },
+                "confidence": {
+                  "$ref": "#/$defs/confidence"
+                }
+              }
+            }
+          },
+          "engine": {
+            "type": "string"
+          },
+          "rotation": {
+            "enum": [
+              0,
+              90,
+              180,
+              270
+            ]
+          },
+          "blank": {
+            "type": "boolean"
+          },
+          "low_resolution": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "filename",
+        "sha256"
+      ],
+      "properties": {
+        "filename": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "policy": {
+      "type": "object"
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "event",
+          "at"
+        ]
+      }
+    },
+    "checks": {
+      "type": "array"
+    },
+    "flags": {
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "extraction": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "model",
+        "ocr",
+        "header",
+        "line_items"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "model": {
+          "type": "string"
+        },
+        "ocr": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "header": {
+          "type": "object",
+          "required": [
+            "supplier_name",
+            "invoice_number",
+            "invoice_date",
+            "currency",
+            "subtotal",
+            "tax",
+            "discount",
+            "total"
+          ],
+          "properties": {
+            "supplier_name": {
+              "$ref": "#/$defs/field"
+            },
+            "invoice_number": {
+              "$ref": "#/$defs/field"
+            },
+            "invoice_date": {
+              "$ref": "#/$defs/field"
+            },
+            "currency": {
+              "$ref": "#/$defs/field"
+            },
+            "subtotal": {
+              "$ref": "#/$defs/field"
+            },
+            "tax": {
+              "$ref": "#/$defs/field"
+            },
+            "discount": {
+              "$ref": "#/$defs/field"
+            },
+            "total": {
+              "$ref": "#/$defs/field"
+            }
+          }
+        },
+        "line_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "description",
+              "quantity",
+              "unit_price",
+              "line_amount"
+            ],
+            "properties": {
+              "description": {
+                "$ref": "#/$defs/field"
+              },
+              "quantity": {
+                "$ref": "#/$defs/field"
+              },
+              "unit_price": {
+                "$ref": "#/$defs/field"
+              },
+              "line_amount": {
+                "$ref": "#/$defs/field"
+              }
+            }
+          }
+        }
+      }
+    },
+    "field": {
+      "type": "object",
+      "required": [
+        "value",
+        "raw",
+        "evidence"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "raw": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reviewer_value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "required": [
+                "page",
+                "box",
+                "ocr_confidence"
+              ],
+              "properties": {
+                "page": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "box": {
+                  "$ref": "#/$defs/box"
+                },
+                "ocr_confidence": {
+                  "$ref": "#/$defs/confidence"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "box": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "$ref": "#/$defs/confidence"
+      }
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  }
+}
