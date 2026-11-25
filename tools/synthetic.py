@@ -5,6 +5,9 @@ from io import BytesIO
 import json
 from pathlib import Path
 import random
+import reportlab
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 import subprocess
 from tempfile import TemporaryDirectory
 
@@ -64,6 +67,9 @@ def invoice(root, template, index, *, scanned=False, stress=None, second_page=Fa
     # A genuinely different arrangement of headers, columns and typography per supplier.
     pdf = root / (slug + ".pdf")
     canvas = Canvas(str(pdf), pagesize=(595, 842), invariant=1)
+    fonts = Path(reportlab.__file__).parent / "fonts"
+    pdfmetrics.registerFont(TTFont("Fixture", str(fonts / "Vera.ttf")))
+    pdfmetrics.registerFont(TTFont("FixtureBold", str(fonts / "VeraBd.ttf")))
     canvas.setTitle("Fictional invoice for extraction benchmark")
     palette = ("#1b3852", "#365856", "#564668", "#5c3c25")
     ink = palette[variant]
@@ -72,18 +78,18 @@ def invoice(root, template, index, *, scanned=False, stress=None, second_page=Fa
 
     def heading(sheet):
         canvas.setFillColor(HexColor(ink))
-        canvas.setFont("Helvetica-Bold", 25)
+        canvas.setFont("FixtureBold", 25)
         canvas.drawString(left, 784, "INVOICE")
-        canvas.setFont("Helvetica", 9)
+        canvas.setFont("Fixture", 9)
         canvas.drawRightString(551, 790, "FICTIONAL TRAINING DOCUMENT")
         if sheet == 1:
             for i, (key, text) in enumerate(zip(tuple(header)[:4], aliases)):
                 x = left if not panel or i % 2 == 0 else 345
                 y = 745 - (i // 2 if panel else i) * 19
-                canvas.setFont("Helvetica", 12)
+                canvas.setFont("Fixture", 12)
                 canvas.drawString(x, y, f"{text}: {header[key]}")
         else:
-            canvas.setFont("Helvetica", 12)
+            canvas.setFont("Fixture", 12)
             canvas.drawString(left, 743, "Line items continued")
 
     def table(rows):
@@ -91,11 +97,11 @@ def invoice(root, template, index, *, scanned=False, stress=None, second_page=Fa
         canvas.setFillColor(HexColor("#e9eef3"))
         canvas.rect(left - 7, y - 6, 550 - left, 22, stroke=0, fill=1)
         canvas.setFillColor(HexColor(ink))
-        canvas.setFont("Helvetica-Bold", 11)
+        canvas.setFont("FixtureBold", 11)
         canvas.drawString(left, y, ("Description", "Service", "Item", "Details")[variant])
         for x, text in zip(columns[1:], ("Qty", "Price", "Amount")):
             canvas.drawRightString(x, y, text)
-        canvas.setFont("Helvetica", 12)
+        canvas.setFont("Fixture", 12)
         for row in rows:
             y -= 26
             canvas.drawString(left, y, row["description"])
@@ -109,7 +115,7 @@ def invoice(root, template, index, *, scanned=False, stress=None, second_page=Fa
         canvas.showPage()
         heading(2)
         y = table(shown[3:])
-    canvas.setFont("Helvetica-Bold", 12)
+    canvas.setFont("FixtureBold", 12)
     for key, text in zip(tuple(header)[4:], aliases[4:]):
         y -= 24
         canvas.drawString(left + 125, y, text + ":")
@@ -121,7 +127,7 @@ def invoice(root, template, index, *, scanned=False, stress=None, second_page=Fa
     if scanned or stress:
         with TemporaryDirectory() as scratch:
             prefix = Path(scratch) / "page"
-            subprocess.run(["pdftoppm", "-scale-to", "1300", "-png", str(pdf), str(prefix)], check=True)
+            subprocess.run(["pdftoppm", "-scale-to", "1300", "-png", str(pdf), str(prefix)], check=True, capture_output=True)
             bitmaps = []
             for png in sorted(Path(scratch).glob("page-*.png")):
                 with Image.open(png) as image:
